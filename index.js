@@ -23,15 +23,31 @@ app
     })
     .get('/api', async (req, res) => {
         const { data: { access_token } } = await getToken()
-        const payload = req.body
+        // const payload = req.body
+
+        const payload = {
+            "Language": "ENG",
+            "Currency": "USD",
+            "destination": "MCO",
+            "DateFrom": "11/26/2016",
+            "DateTO": "11/29/2016",
+            "Occupancy": {
+                "AdultCount": "1",
+                "ChildCount": "1",
+                "ChildAges": ["10"]
+            }
+        }
+
         const config = { headers: { Authorization: `Bearer ${access_token}`, 'Content-Type': 'application/json' } }
         console.log(access_token, payload, config)
-        // try {
-        //     const result = await axiosInstance.post('api/Ticket/Search', payload, config)
-        //     res.json(result)
-        // } catch (err) {
-        //     res.json(err.message)
-        // }
+        try {
+            const result = await axiosInstance.post('api/Ticket/Search', payload, config)
+            console.log('Result')
+            res.json(result.data)
+        } catch (err) {
+            console.log('Error')
+            res.json(err.message)
+        }
     })
 
 app.listen(PORT, () => console.log(`Running on ${PORT}`))
